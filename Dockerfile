@@ -1,3 +1,3 @@
 FROM nginx:alpine
-COPY standalone /usr/share/nginx/html
+COPY example/dist/standalone /usr/share/nginx/html
 EXPOSE 80
