@@ -36,6 +36,7 @@ import {
 import { useSubscriptionOnEvents } from '../../../hooks';
 import { AbbreviationLookupContainer } from '../dialog/AbbreviationLookup';
 import { initLib } from '../state/templates/init-lib';
+import { load } from '../';
 
 interface AppCallProps {
   checkServer: () => void;
@@ -61,6 +62,58 @@ const App = (props: Props) => {
   useSubscriptionOnEvents();
 
   useEffect(() => {
+    console.log('App container useEffect');
+    const queryParams = new URLSearchParams(window.location.search);
+    const filename = queryParams.get('filename') || '';
+    console.log('queryParams:', queryParams);
+    console.log('filename:', filename);
+    const url = `/wd/${encodeURIComponent(filename)}`;
+    console.log('url:', url);
+
+    // check if file already exists
+    if (filename.length > 0) {
+      fetch(url, { method: 'PROPFIND' }).then((result) => {
+        switch (result.status) {
+          case 207: {
+            // The file exists; open the app with its contents.
+            fetch(url, { method: 'GET' }).then((contentResponse) => {
+              contentResponse.text().then((content) => {
+                console.log('content:', content);
+                dispatch(
+                  load(content as any, {
+                    badHeaderRecover: true,
+                    fragment: undefined, // TODO - what is this?
+                    'input-format': undefined, // TODO - also this,
+                  }),
+                  // TODO: Removed ownProps.onOk call. consider refactoring of load function in release 2.4
+                  // See PR #731 (https://github.com/epam/ketcher/pull/731)
+                );
+              });
+            });
+            break;
+          }
+          case 404: {
+            // No such file; it will be created when first saved.
+            // POST filename to url
+            fetch(url, {
+              method: 'PUT',
+            })
+              .then((response) => response.text())
+              .then((data) => {
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+            break;
+          }
+          default: {
+            // An error happened; do not start the app.
+          }
+        }
+      });
+    }
+
     checkServer();
     dispatch(initFGTemplates());
     dispatch(initSaltsAndSolventsTemplates());

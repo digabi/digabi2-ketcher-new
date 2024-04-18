@@ -76,10 +76,10 @@ class SaveDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      disableControls: true,
+      disableControls: false,
       imageFormat: 'svg',
       tabIndex: 0,
-      isLoading: true,
+      isLoading: false,
     };
     this.isRxn =
       this.props.struct.hasRxnArrow() || this.props.struct.hasMultitailArrow();
@@ -125,12 +125,40 @@ class SaveDialog extends Component {
     );
   }
 
+  saveFile(structStr) {
+    const savingStruct = structStr;
+    const queryParams = new URLSearchParams(window.location.search);
+    const queryParamFilename = queryParams.get('filename') || '';
+    console.log('queryParams:', queryParams);
+    console.log('filename:', queryParamFilename);
+    const url = `/wd/${encodeURIComponent(queryParamFilename)}`;
+    console.log('url:', url);
+    fetch(url, {
+      method: 'PUT',
+      body: savingStruct,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        this.props.onOk({});
+      });
+  }
+
   componentDidMount() {
     const { checkOptions } = this.props.checkState;
     this.props.onCheck(checkOptions);
-    this.changeType(this.isRxn ? 'rxn' : 'mol').then(
-      (res) => res instanceof Error && this.setState({ disableControls: true }),
-    );
+    this.changeType(this.isRxn ? 'rxn' : 'mol').then((res) => {
+      if (res instanceof Error) {
+        this.setState({ disableControls: false });
+      } else {
+        this.saveFile(res);
+      }
+    });
   }
 
   isImageFormat = (format) => {
@@ -223,6 +251,7 @@ class SaveDialog extends Component {
               tabIndex: 0,
               structStr,
             });
+            return structStr;
           },
           (e) => {
             errorHandler(e.message);
@@ -520,18 +549,7 @@ class SaveDialog extends Component {
   };
 
   render() {
-    return (
-      <Dialog
-        className={classes.dialog}
-        title="Save Structure"
-        params={this.props}
-        buttons={this.getButtons()}
-        needMargin={false}
-        withDivider={true}
-      >
-        {this.renderForm()}
-      </Dialog>
-    );
+    <></>;
   }
 }
 
