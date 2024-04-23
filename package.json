@@ -1,6 +1,6 @@
 {
   "name": "ketcher",
-  "version": "2.16.1-digabi.1",
+  "version": "2.16.1-digabi.2",
   "private": true,
   "workspaces": [
     "packages/ketcher-core",
