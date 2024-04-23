@@ -38,7 +38,7 @@ if [ "$answer" = "y" ]; then
     exit 1
   fi
   echo ""
-  git push --atomic origin $BRANCH_TO_RELEASE_FROM "$NEW_NPM_VERSION"
+  git push --no-verify --atomic origin $BRANCH_TO_RELEASE_FROM "$NEW_NPM_VERSION"
   echo ""
   echo "Release commit and tag $NEW_NPM_VERSION pushed."
 else
