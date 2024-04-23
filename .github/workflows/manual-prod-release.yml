@@ -7,9 +7,6 @@ on:
         description: 'Tag'
         required: true
         type: string
-  push:
-    branches:
-      - release/2.16
 
 jobs:
   release:
