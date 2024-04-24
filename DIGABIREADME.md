@@ -1,7 +1,20 @@
 # Ketcher
 
-1. Checkout `release/2.16` branch if not already as HEAD (to enable 3d spinning)
-2. Build ketcher with `npm i && npm run build`
-3. If releasing a new image version, update apps-dev.json or apps-prod.json in ../digabi2
-4. Run `npm run create-configs` in digabi2 repo
-5. Run `./docker_build.sh` to patch ketcher with window.top fix and build and tag a docker image from it. This takes the tag from ../digabi2
+Development is mainly done in  `release/2.16` branch. This branch contains various fixes regarding the 3d spinning and the Github Actions build pipelines
+
+## Development
+
+The development flow is roughly as follows
+
+1. Make sure you are in `release/2.16` branch.
+2. Make your changes
+3. To test your changes, rebuild and tag the docker image by running `docker build -t "863419159770.dkr.ecr.eu-north-1.amazonaws.com/ketcher:v$(npm pkg get version | tr -d \")" .`
+4. Restart the digabi2 docker compose to make sure that the new image is used.
+
+## Development release
+
+To release a new development version of Ketcher, run `./dev-release.sh`. This will create a new git tag, and build and push a Docker image with that tag into our private ECR. Building and pushing to ECR happens in Github Actions. Once built and pushed, you can update the Ketcher version `apps-dev.json` in the `digabi2` repository to point to the new tag.
+
+## Release
+
+To promote a development version of the image to production (i.e. release it to our public ECR) run `./release.sh`. Choose the tag you want to promote to production, which will trigger a Github Actions workflow. The workflow will push the corresponding private image to our public ECR. After this has completed, update the Ketcher version in `apps-prod.json` in the `digabi2` repository to point to the newly released image tag.
