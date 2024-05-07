@@ -4,6 +4,9 @@ on:
   push:
     tags: 'v[0-9]+.[0-9]+.[0-9]+-digabi.[0-9]+'
 
+concurrency:
+  group: ${{ github.ref_name }}
+
 jobs:
   dev-release:
     name: Release to private ECR
