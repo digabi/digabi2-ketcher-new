@@ -32,7 +32,6 @@ import {
   legacyCopy,
 } from 'ketcher-core';
 
-import { Dialog } from '../../../../components';
 import Tabs from 'src/script/ui/component/view/Tabs';
 import { ErrorsContext } from '../../../../../../../contexts';
 import { SaveButton } from '../../../../../component/view/savebutton';
