@@ -80,7 +80,7 @@ const App = (props: Props) => {
               contentResponse.text().then((content) => {
                 console.log('content:', content);
                 dispatch(
-                  load(content as any, {
+                  load(content, {
                     badHeaderRecover: true,
                     fragment: undefined, // TODO - what is this?
                     'input-format': undefined, // TODO - also this,
