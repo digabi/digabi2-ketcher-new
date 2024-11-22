@@ -1,5 +1,8 @@
 FROM node:18.17.0-bullseye as build
 
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
+
 WORKDIR /app
 
 COPY . ./
