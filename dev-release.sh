@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BRANCH_TO_RELEASE_FROM="release/2.16"
+BRANCH_TO_RELEASE_FROM="master"
 FILES_TO_INCLUDE_IN_RELEASE_COMMITS="package.json package-lock.json"
 
 # Show help message if no arguments are given or -h/--help flag is used
