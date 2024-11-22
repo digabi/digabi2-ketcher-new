@@ -1,8 +1,4 @@
-# TODO: Update to a later version of node
-## However, this requires updating ttypescript (not typescript!) to 1.5.15, 
-## which for some reason breaks everything, so it might be smartest to wait for an upstream update
-## from Ketcher.
-FROM node:16.20.1 as build
+FROM node:18.17.0-bullseye as build
 
 WORKDIR /app
 
