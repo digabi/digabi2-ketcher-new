@@ -24,6 +24,10 @@ jobs:
           ref: master
           fetch-tags: true
           fetch-depth: 0
+      - name: Debug .git directory
+        run: |
+          echo "Files in current directory:"
+          ls -la
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -37,11 +41,15 @@ jobs:
         with:
           buildkitd-flags: --debug
       - name: Set VERSION variable
-        run: echo "APP_VERSION=$(git describe --tags --abbrev=0 || echo 'version-missing')" >> $GITHUB_ENV
+        run: |
+          echo "APP_VERSION=$(git describe --tags --abbrev=0 || echo 'version-missing')" >> $GITHUB_ENV
+          echo "Files in current directory are now:"
+          ls -la
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
+          context: .
           tags: ${{ steps.login-ecr.outputs.registry }}/ketcher:${{ github.ref_name }}
           provenance: false
           cache-from: type=gha
