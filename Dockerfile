@@ -10,6 +10,7 @@ COPY . ./
 RUN npm install
 RUN pwd
 RUN ls -la
+RUN git log --oneline -n 5
 RUN npm run build
 RUN find example/dist/standalone -name "*" | xargs grep -sl "window.top" | xargs --no-run-if-empty sed -i 's/window.top/window/g'
 
