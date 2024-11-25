@@ -29,10 +29,7 @@ const includePattern = 'src/**/*';
 
 const getTagName = () => {
   try {
-    return (
-      process.env.APP_VERSION ||
-      execSync('git describe --tags --abbrev=0', { encoding: 'utf8' })
-    );
+    return execSync('git describe --tags --abbrev=0', { encoding: 'utf8' });
   } catch (error) {
     console.error(error);
     return 'master';
